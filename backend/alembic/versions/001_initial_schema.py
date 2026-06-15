@@ -71,11 +71,9 @@ def upgrade() -> None:
     # Add vector column via raw SQL (pgvector) - no fixed dimension for flexibility
     op.execute("ALTER TABLE chunks ADD COLUMN IF NOT EXISTS embedding vector")
     op.create_index("idx_chunks_document_id", "chunks", ["document_id"])
-    # IVFFlat index for vector search
-    op.execute(
-        "CREATE INDEX IF NOT EXISTS chunks_embedding_idx ON chunks "
-        "USING ivfflat (embedding vector_cosine_ops) WITH (lists = 100)"
-    )
+    # Note: Vector index will be created after first embeddings are stored
+    # since IVFFlat requires known dimensions. Use:
+    # CREATE INDEX chunks_embedding_idx ON chunks USING hnsw (embedding vector_cosine_ops);
 
     # Conversations table
     op.create_table(
