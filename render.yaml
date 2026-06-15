@@ -1,0 +1,45 @@
+# Render Blueprint - Backend deployment configuration
+# https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: rag-service-backend
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: cd backend && pip install .
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        sync: false  # Set manually from Neon
+      - key: UPLOAD_DIR
+        value: /tmp/rag-uploads
+      - key: MAX_FILE_SIZE_MB
+        value: "50"
+      - key: MAX_FILES_PER_REQUEST
+        value: "20"
+      - key: CHUNK_SIZE_TOKENS
+        value: "512"
+      - key: CHUNK_OVERLAP_TOKENS
+        value: "50"
+      - key: DEFAULT_TOP_K
+        value: "5"
+      - key: SIMILARITY_THRESHOLD
+        value: "0.3"
+      - key: CONTEXT_WINDOW_MESSAGES
+        value: "10"
+      - key: ENCRYPTION_KEY
+        sync: false  # Generate and set manually
+      - key: DEFAULT_LLM_PROVIDER
+        value: groq
+      - key: DEFAULT_LLM_MODEL
+        value: llama-3.1-8b-instant
+      - key: DEFAULT_EMBEDDING_PROVIDER
+        value: voyage
+      - key: DEFAULT_EMBEDDING_MODEL
+        value: voyage-3-lite
+      - key: OLLAMA_BASE_URL
+        value: ""
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+    healthCheckPath: /api/v1/health
