@@ -11,6 +11,7 @@ dist/
 build/
 .venv/
 venv/
+*.egg
 
 # Node
 node_modules/
@@ -22,6 +23,7 @@ out/
 .idea/
 *.swp
 *.swo
+.kiro/
 
 # OS
 .DS_Store
@@ -29,6 +31,10 @@ Thumbs.db
 
 # Uploads (managed by Docker volume)
 uploads/
+/tmp/rag-uploads/
 
 # Database
 pgdata/
+
+# Logs
+*.log
